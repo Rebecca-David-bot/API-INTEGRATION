@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Identifier</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f8ff;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .city {
+            margin: 10px 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .temperature {
+            font-size: 48px;
+            color: #ff6347;
+        }
+        .description {
+            font-size: 20px;
+            color: #555;
+        }
+        .input {
+            margin: 20px 0;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 200px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body> 
+    <div class="container">
+        <h1>Weather Identifier Map </h1>
+        <div class="input">
+            <input type="text" id="city" placeholder="Enter city name">
+            <button onclick="fetchWeather()">Get Weather</button>
+        </div>
+
+        <div id="weatherData">
+            <!-- Weather data will appear here -->
+        </div>
+    </div>
+
+    <script>
+        async function fetchWeather() {
+            const city = document.getElementById('city').value;
+            const apiKey = '45c82d29565156f376c7cadaf52c2fdd'; 
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.cod === 200) {
+                    
+                    const cityName = data.name;
+                    const temp = data.main.temp;
+                    const description = data.weather[0].description;
+                    displayWeather(cityName, temp, description);
+                } else {
+                   
+                    alert('City not found. Please try again.');
+                }
+            } catch (error) {
+                alert('Error fetching data. Please try again later.');
+            }
+        }
+
+        function displayWeather(city, temp, description) {
+            const weatherDataDiv = document.getElementById('weatherData');
+            weatherDataDiv.innerHTML = `
+                <div class="city">${city}</div>
+                <div class="temperature">${temp}°C</div>
+                <div class="description">${description}</div>
+            `;
+        }
+    </script>
+
+</body>
+</html>
